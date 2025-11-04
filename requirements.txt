@@ -1,0 +1,8 @@
+Flask
+torch==2.5.1
+transformers
+tensorflow
+tensorflow-hub
+soundfile
+librosa
+accelerate

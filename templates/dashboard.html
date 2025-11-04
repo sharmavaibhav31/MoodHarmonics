@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<section id="home" class="tab-section active">
+  <div class="hero-card">
+    <h1>MoodHarmonics</h1>
+    <p>Create soulful tracks and lyrics with AI. Curate your vibe.</p>
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" data-target="generate">Start Creating</button>
+      <a class="btn" href="{{ url_for('index') }}">Learn more</a>
+    </div>
+  </div>
+</section>
+
+<section id="generate" class="tab-section">
+  <div class="gen-grid">
+    <div class="panel">
+      <h2>Generate Music & Lyrics</h2>
+      <textarea id="genPrompt" placeholder="Describe the mood, instruments or scene..."></textarea>
+      <div class="row">
+        <button id="genBtn" class="btn primary">Generate</button>
+        <button id="randBtn" class="btn">Random Prompt</button>
+        <span id="genStatus" class="muted"></span>
+      </div>
+      <div id="genResult" class="card hidden" style="margin-top:12px">
+        <div class="shimmer" style="height:120px; border-radius:10px"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Upload & Classify</h2>
+      <form id="uploadForm">
+        <input type="file" id="uploadFile" name="file" accept="audio/*"/>
+        <input type="text" id="uploadTitle" name="title" placeholder="Title (optional)"/>
+        <textarea id="uploadLyrics" name="lyrics" placeholder="Lyrics (optional)"></textarea>
+        <div class="row">
+          <button type="submit" class="btn">Upload & Classify</button>
+          <span id="uploadStatus" class="muted"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="playlist" class="tab-section">
+  <div class="panel">
+    <h2>Playlist</h2>
+    <div id="playlistFilters" class="filters"></div>
+    <div id="playlistGrid" class="grid"></div>
+  </div>
+  
+</section>
+
+<section id="library" class="tab-section">
+  <div class="panel">
+    <h2>Library</h2>
+    <p>All songs (grouped by genre)</p>
+    <div id="libraryGrid"></div>
+  </div>
+</section>
+{% endblock %}

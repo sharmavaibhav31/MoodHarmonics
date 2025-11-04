@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Your Playlist</h2>
+  <div id="playlistPageFilters" class="filters"></div>
+  <div id="playlistPageGrid" class="grid"></div>
+</section>
+<script>
+  // quick load
+  fetch('/api/playlist').then(r=>r.json()).then(d=>{
+    const all = d.playlist || [];
+    const grid = document.getElementById('playlistPageGrid');
+    const filters = document.getElementById('playlistPageFilters');
+    const genres = Array.from(new Set(all.map(x=>x.genre||'uncategorized')));
+    const render = (filter) => {
+      grid.innerHTML = '';
+      (all.filter(x=>!filter || (x.genre||'uncategorized')===filter)).forEach(item => {
+        const wrap = document.createElement('div'); wrap.className='tile';
+        wrap.innerHTML = `<div class="cover">${(item.title||'S').slice(0,2)}</div>
+          <div class="info"><div class="title">${item.title||item.prompt}</div>
+          <div class="subtitle">${item.created_at} • ${item.genre||'unknown'}</div>
+          <div class="controls"><a class="btn" href="/static/music/${item.filename}" download>Download</a></div></div>`;
+        grid.appendChild(wrap);
+      });
+    };
+    filters.innerHTML = '';
+    const allBtn = document.createElement('button'); allBtn.className = 'filter-pill active'; allBtn.textContent = 'All';
+    allBtn.addEventListener('click', ()=>{ [...filters.children].forEach(c=>c.classList.remove('active')); allBtn.classList.add('active'); render(null); });
+    filters.appendChild(allBtn);
+    genres.forEach(g=>{
+      const b=document.createElement('button'); b.className='filter-pill'; b.textContent=g; b.addEventListener('click',()=>{[...filters.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); render(g);}); filters.appendChild(b);
+    });
+    render(null);
+  });
+</script>
+{% endblock %}

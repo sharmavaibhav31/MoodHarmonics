@@ -1,0 +1,32 @@
+[
+  {
+    "id": "633bc54b",
+    "filename": "uploaded_20251104_141200_633bc54b.wav",
+    "title": "generated_music (7)",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "classical",
+    "genre_confidence": 0.9543158411979675,
+    "created_at": "20251104_141200"
+  },
+  {
+    "id": "a17f193c",
+    "filename": "uploaded_20251104_132348_a17f193c.wav",
+    "title": "generated_music (1)",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "country",
+    "genre_confidence": 0.9238249659538269,
+    "created_at": "20251104_132348"
+  },
+  {
+    "id": "a20ce6e4",
+    "filename": "uploaded_20251104_132321_a20ce6e4.wav",
+    "title": "jazz_song",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "jazz",
+    "genre_confidence": 0.5691477656364441,
+    "created_at": "20251104_132321"
+  }
+]
