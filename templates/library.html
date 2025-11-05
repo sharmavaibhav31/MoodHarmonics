@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Library - MoodHarmonics{% endblock %}
+
+{% block content %}
+<section class="library-section">
+    <div class="library-container">
+        <h1 class="section-title">Your Music Library</h1>
+        <p class="subtitle-sm">Upload, Classify, and Listen.</p>
+
+        <div class="upload-card">
+            <div id="dropZone" class="drop-zone">
+                <span class="dz-icon">⬆</span>
+                <p class="dz-title">Drag & drop audio here</p>
+                <p class="dz-sub">or click to browse .mp3 / .wav</p>
+                <input type="file" id="uploadFileLib" accept="audio/*" hidden/>
+            </div>
+            <form id="uploadFormLib" class="upload-form">
+                <input type="text" id="uploadTitleLib" placeholder="Title (optional)"/>
+                <textarea id="uploadLyricsLib" placeholder="Lyrics (optional)"></textarea>
+                <button type="submit" class="action-button glow">Upload & Classify</button>
+                <span id="uploadStatusLib" class="muted"></span>
+            </form>
+        </div>
+
+        <div id="libraryGrid"></div>
+    </div>
+</section>
+{% endblock %}

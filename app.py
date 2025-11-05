@@ -122,8 +122,13 @@ def dashboard():
     return render_template("dashboard.html")
 
 @app.route("/playlist")
-def playlist_page():
+def playlist():
     return render_template("playlist.html")
+
+@app.route("/library")
+def library():
+    return render_template("library.html")
+
 
 # ---------------------------------------------------------
 # API: generate (text -> music+lyrics) (existing)

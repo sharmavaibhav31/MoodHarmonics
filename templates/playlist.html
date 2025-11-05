@@ -1,36 +1,35 @@
 {% extends "base.html" %}
+
+{% block title %}Playlist - MoodHarmonics{% endblock %}
+
 {% block content %}
-<section class="panel">
-  <h2>Your Playlist</h2>
-  <div id="playlistPageFilters" class="filters"></div>
-  <div id="playlistPageGrid" class="grid"></div>
+<section class="playlist-section">
+    <div class="playlist-container">
+        <div class="playlist-header">
+            <div>
+                <h1 class="section-title">My Playlist</h1>
+                <p class="subtitle-sm">Curated by MoodHarmonics AI</p>
+            </div>
+            <div class="toolbar">
+                <button class="action-button" id="shuffleBtn">🔀 Shuffle</button>
+                <input type="search" id="playlistSearch" class="toolbar-input" placeholder="Search tracks">
+                <select id="playlistSort" class="toolbar-select">
+                    <option value="new">Newest</option>
+                    <option value="title">Title</option>
+                    <option value="genre">Genre</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="playlist-layout">
+            <div id="playlistGrid" class="playlist-tracks"></div>
+            <div class="lyrics-panel" id="lyricsPanel">
+                <h3>Lyrics</h3>
+                <div class="lyrics-content" id="playlistLyrics">
+                    <p class="lyrics-placeholder">Select a track to view lyrics</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
-<script>
-  // quick load
-  fetch('/api/playlist').then(r=>r.json()).then(d=>{
-    const all = d.playlist || [];
-    const grid = document.getElementById('playlistPageGrid');
-    const filters = document.getElementById('playlistPageFilters');
-    const genres = Array.from(new Set(all.map(x=>x.genre||'uncategorized')));
-    const render = (filter) => {
-      grid.innerHTML = '';
-      (all.filter(x=>!filter || (x.genre||'uncategorized')===filter)).forEach(item => {
-        const wrap = document.createElement('div'); wrap.className='tile';
-        wrap.innerHTML = `<div class="cover">${(item.title||'S').slice(0,2)}</div>
-          <div class="info"><div class="title">${item.title||item.prompt}</div>
-          <div class="subtitle">${item.created_at} • ${item.genre||'unknown'}</div>
-          <div class="controls"><a class="btn" href="/static/music/${item.filename}" download>Download</a></div></div>`;
-        grid.appendChild(wrap);
-      });
-    };
-    filters.innerHTML = '';
-    const allBtn = document.createElement('button'); allBtn.className = 'filter-pill active'; allBtn.textContent = 'All';
-    allBtn.addEventListener('click', ()=>{ [...filters.children].forEach(c=>c.classList.remove('active')); allBtn.classList.add('active'); render(null); });
-    filters.appendChild(allBtn);
-    genres.forEach(g=>{
-      const b=document.createElement('button'); b.className='filter-pill'; b.textContent=g; b.addEventListener('click',()=>{[...filters.children].forEach(c=>c.classList.remove('active')); b.classList.add('active'); render(g);}); filters.appendChild(b);
-    });
-    render(null);
-  });
-</script>
 {% endblock %}

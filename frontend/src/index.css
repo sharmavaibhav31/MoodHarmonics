@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-white text-gray-900 dark:bg-[#0b0f17] dark:text-gray-100 antialiased;
+}
+
+.gradient-hero {
+  background: radial-gradient(1200px 600px at 50% -20%, rgba(56,189,248,0.35), transparent 60%),
+              radial-gradient(800px 400px at 80% 0%, rgba(139,92,246,0.25), transparent 60%),
+              radial-gradient(800px 400px at 20% 0%, rgba(236,72,153,0.25), transparent 60%);
+}
+
+.glass {
+  @apply bg-white/10 backdrop-blur-md border border-white/10 dark:bg-[#0f1623]/60 dark:border-white/10;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-card text-white shadow-soft
+  bg-gradient-to-r from-teal-400 via-blue-500 to-fuchsia-500 hover:from-teal-300 hover:via-blue-400 hover:to-fuchsia-400
+  transition-transform active:scale-[0.98];
+}
+
+.card {
+  @apply rounded-card glass shadow-soft;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
+}
+
+

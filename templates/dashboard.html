@@ -1,60 +1,87 @@
 {% extends "base.html" %}
+
+{% block title %}Dashboard - MoodHarmonics{% endblock %}
+
 {% block content %}
-<section id="home" class="tab-section active">
-  <div class="hero-card">
-    <h1>MoodHarmonics</h1>
-    <p>Create soulful tracks and lyrics with AI. Curate your vibe.</p>
-    <div class="row" style="margin-top:8px">
-      <button class="btn primary" data-target="generate">Start Creating</button>
-      <a class="btn" href="{{ url_for('index') }}">Learn more</a>
-    </div>
-  </div>
-</section>
+<section class="dashboard-section">
+    <div class="dashboard-container">
+        <h1 class="section-title">Create Your Music</h1>
 
-<section id="generate" class="tab-section">
-  <div class="gen-grid">
-    <div class="panel">
-      <h2>Generate Music & Lyrics</h2>
-      <textarea id="genPrompt" placeholder="Describe the mood, instruments or scene..."></textarea>
-      <div class="row">
-        <button id="genBtn" class="btn primary">Generate</button>
-        <button id="randBtn" class="btn">Random Prompt</button>
-        <span id="genStatus" class="muted"></span>
-      </div>
-      <div id="genResult" class="card hidden" style="margin-top:12px">
-        <div class="shimmer" style="height:120px; border-radius:10px"></div>
-      </div>
-    </div>
+        <div class="generation-panel">
+            <div class="input-group">
+                <label for="genPrompt">Describe Your Mood</label>
+                <textarea
+                    id="genPrompt"
+                    class="input-field"
+                    rows="3"
+                    placeholder="E.g., I'm feeling nostalgic and reflective, thinking about summer nights..."
+                ></textarea>
+            </div>
 
-    <div class="panel">
-      <h2>Upload & Classify</h2>
-      <form id="uploadForm">
-        <input type="file" id="uploadFile" name="file" accept="audio/*"/>
-        <input type="text" id="uploadTitle" name="title" placeholder="Title (optional)"/>
-        <textarea id="uploadLyrics" name="lyrics" placeholder="Lyrics (optional)"></textarea>
-        <div class="row">
-          <button type="submit" class="btn">Upload & Classify</button>
-          <span id="uploadStatus" class="muted"></span>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="genreSelect">Genre</label>
+                    <select id="genreSelect" class="input-field">
+                        <option value="">Select Genre</option>
+                        <option value="pop">Pop</option>
+                        <option value="rock">Rock</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="electronic">Electronic</option>
+                        <option value="classical">Classical</option>
+                        <option value="hiphop">Hip Hop</option>
+                        <option value="indie">Indie</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="tempoSelect">Tempo</label>
+                    <select id="tempoSelect" class="input-field">
+                        <option value="">Select Tempo</option>
+                        <option value="slow">Slow</option>
+                        <option value="medium">Medium</option>
+                        <option value="fast">Fast</option>
+                        <option value="variable">Variable</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-row" style="gap:8px">
+                <button class="generate-button" id="genBtn">
+                    Generate
+                    <span class="button-glow"></span>
+                </button>
+                <button class="action-button" id="randBtn">Random Prompt</button>
+                <span id="genStatus" class="muted"></span>
+            </div>
         </div>
-      </form>
+
+        <div class="results-panel" id="genResult" style="display: none;">
+            <div class="results-grid">
+                <div class="audio-section">
+                    <h3>Your Music</h3>
+                    <div class="audio-player-container">
+                        <audio id="audioPlayer" controls class="audio-player">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <div class="player-actions">
+                        <button class="action-button" id="downloadBtn">
+                            <span>⬇</span> Download
+                        </button>
+                        <button class="action-button" id="saveBtn">
+                            <span>💾</span> Save to Library
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lyrics-section">
+                    <h3>Lyrics</h3>
+                    <div class="lyrics-box" id="lyricsBox">
+                        <p class="lyrics-placeholder">Your lyrics will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</section>
-
-<section id="playlist" class="tab-section">
-  <div class="panel">
-    <h2>Playlist</h2>
-    <div id="playlistFilters" class="filters"></div>
-    <div id="playlistGrid" class="grid"></div>
-  </div>
-  
-</section>
-
-<section id="library" class="tab-section">
-  <div class="panel">
-    <h2>Library</h2>
-    <p>All songs (grouped by genre)</p>
-    <div id="libraryGrid"></div>
-  </div>
 </section>
 {% endblock %}

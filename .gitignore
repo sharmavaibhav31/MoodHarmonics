@@ -1,0 +1,74 @@
+# --- Python & Virtual Environments ---
+# Compiled Python files
+__pycache__/
+*.pyc
+
+# Virtual environment folders
+venv/
+.venv/
+env/
+.env
+
+# --- Operating System Files ---
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# --- Jupyter Notebook ---
+# Notebook checkpoint files
+.ipynb_checkpoints/
+
+# --- Web App User Data ---
+# Ignore all user-uploaded and app-generated music.
+# These don't belong in the code repository.
+webapp/static/music/uploaded_*.wav
+webapp/static/music/generated_*.wav
+
+# --- IDE/Editor Files ---
+.vscode/
+.idea/
+*.swp
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea/
+.vscode/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor specific
+*.sublime-project
+*.sublime-workspace
+.vscode/
