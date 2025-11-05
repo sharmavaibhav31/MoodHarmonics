@@ -29,7 +29,9 @@ export default function App() {
   }), []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Global gradient background covering full viewport */}
+      <div className="fixed inset-0 -z-10 gradient-hero" aria-hidden />
       <TopNav theme={theme} setTheme={setTheme} />
 
       <main className={`flex-1 ${onLanding ? 'p-0' : 'p-6'}`}>

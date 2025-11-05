@@ -13,12 +13,25 @@ export default function Compose() {
   const [loading, setLoading] = useState(false);
   const [entry, setEntry] = useState(null);
   const [lyrics, setLyrics] = useState('');
+  const [progress, setProgress] = useState(0);
 
   async function handleGenerate() {
     if (!prompt.trim()) return;
     setLoading(true);
     setEntry(null);
     setLyrics('');
+    setProgress(0);
+    let rafId;
+    // Indeterminate-ish progress while backend works
+    const startTime = Date.now();
+    const tick = () => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      // Ease towards 80% and hover there until completion
+      const target = Math.min(0.8, 1 - Math.exp(-elapsed / 2));
+      setProgress((p) => (p < target ? target : p));
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
     try {
       const res = await generateMusic(prompt.trim());
       const item = res?.entry || res; // backend returns entry
@@ -33,7 +46,11 @@ export default function Compose() {
     } catch (e) {
       console.error(e);
     } finally {
+      cancelAnimationFrame(rafId);
+      // Smoothly fill to 100% then reset
+      setProgress(1);
       setLoading(false);
+      setTimeout(() => setProgress(0), 600);
     }
   }
 
@@ -46,6 +63,10 @@ export default function Compose() {
       <div className="card p-6">
         <h2 className="text-2xl font-semibold">Compose</h2>
         <p className="opacity-80 text-sm mt-1">Describe the music you want to generate.</p>
+        {/* Progress bar */}
+        <div className={`mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden transition-opacity ${loading || progress > 0 ? 'opacity-100' : 'opacity-0'}`} aria-hidden={!loading}>
+          <div className="h-full bg-gradient-to-r from-teal-400 via-blue-500 to-fuchsia-500 transition-[width] duration-200" style={{ width: `${Math.round(progress * 100)}%` }} />
+        </div>
         <div className="mt-4">
           <textarea
             className="w-full h-32 p-4 rounded-card glass focus-ring"

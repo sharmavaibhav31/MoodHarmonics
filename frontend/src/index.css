@@ -15,9 +15,13 @@ body {
 }
 
 .gradient-hero {
-  background: radial-gradient(1200px 600px at 50% -20%, rgba(56,189,248,0.35), transparent 60%),
-              radial-gradient(800px 400px at 80% 0%, rgba(139,92,246,0.25), transparent 60%),
-              radial-gradient(800px 400px at 20% 0%, rgba(236,72,153,0.25), transparent 60%);
+  /* Smooth, continuous backdrop across the whole page */
+  background:
+    radial-gradient(1400px 700px at 50% -10%, rgba(56,189,248,0.28), transparent 60%),
+    radial-gradient(1000px 600px at 85% 10%, rgba(139,92,246,0.22), transparent 60%),
+    radial-gradient(1000px 600px at 15% 20%, rgba(236,72,153,0.18), transparent 60%),
+    radial-gradient(1200px 700px at 50% 120%, rgba(14,165,233,0.18), transparent 60%),
+    linear-gradient(180deg, rgba(15,23,42,0.6) 0%, rgba(11,15,23,0.9) 60%, rgba(11,15,23,1) 100%);
 }
 
 .glass {

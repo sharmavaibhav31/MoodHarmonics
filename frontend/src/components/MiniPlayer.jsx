@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FiPlay, FiPause, FiSkipBack, FiSkipForward } from 'react-icons/fi';
+import { getPlaceholderCover } from '../lib/placeholders.js';
 
 export default function MiniPlayer() {
   const [queue, setQueue] = useState(() => {
@@ -56,7 +57,7 @@ export default function MiniPlayer() {
     <div className="sticky bottom-0 z-40">
       <div className="max-w-7xl mx-auto px-4 pb-4">
         <div className="card p-3 flex items-center gap-4">
-          <img src={current.cover || 'data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\"/>'} alt="cover" className="w-12 h-12 rounded-md object-cover" />
+          <img src={current.cover || getPlaceholderCover(current.filename || current.title || 'mh')} alt="cover" className="w-12 h-12 rounded-md object-cover" />
           <div className="min-w-0 flex-1">
             <div className="font-medium truncate">{current.title || current.prompt || 'Untitled'}</div>
             <div className="text-xs opacity-70 truncate">{current.genre || 'Unknown'} • {current.date || ''}</div>

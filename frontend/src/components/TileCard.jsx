@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
+import { getPlaceholderCover } from '../lib/placeholders.js';
 
 export default function TileCard({ item, onPlay, onLyrics, onDownload, onAddToPlaylist }) {
   const title = item.title || item.prompt || 'Untitled';
   const subtitle = [item.genre, item.date].filter(Boolean).join(' • ');
   const audioUrl = item.audio_url;
+  const cover = item.cover || getPlaceholderCover(item.filename || title);
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -12,7 +14,7 @@ export default function TileCard({ item, onPlay, onLyrics, onDownload, onAddToPl
       className="card overflow-hidden group"
     >
       <div className="aspect-square bg-gradient-to-br from-slate-700/40 to-slate-900/40 flex items-center justify-center">
-        <img src={item.cover || ''} alt="cover" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display='none'; }} />
+        <img src={cover} alt="cover" className="w-full h-full object-cover" />
       </div>
       <div className="p-3">
         <div className="font-semibold truncate">{title}</div>
