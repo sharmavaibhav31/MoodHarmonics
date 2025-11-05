@@ -24,6 +24,34 @@ body {
     linear-gradient(180deg, rgba(15,23,42,0.6) 0%, rgba(11,15,23,0.9) 60%, rgba(11,15,23,1) 100%);
 }
 
+.aurora {
+  position: relative;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(60px);
+  opacity: 0.35;
+  background: radial-gradient(650px 350px at calc(50% + var(--mx,0px)*0.05) calc(40% + var(--my,0px)*0.05), rgba(56,189,248,0.35), transparent 60%),
+              radial-gradient(600px 300px at calc(30% - var(--mx,0px)*0.04) calc(65% - var(--my,0px)*0.04), rgba(147,51,234,0.35), transparent 60%),
+              radial-gradient(700px 350px at calc(70% + var(--mx,0px)*0.03) calc(75% + var(--my,0px)*0.03), rgba(236,72,153,0.35), transparent 60%);
+  animation: auroraFloat 12s ease-in-out infinite alternate;
+}
+.aurora::after {
+  opacity: 0.25;
+  filter: blur(90px);
+  animation-duration: 18s;
+}
+
+@keyframes auroraFloat {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  100% { transform: translate3d(0,-10px,0) scale(1.03); }
+}
+
 .glass {
   @apply bg-white/10 backdrop-blur-md border border-white/10 dark:bg-[#0f1623]/60 dark:border-white/10;
 }

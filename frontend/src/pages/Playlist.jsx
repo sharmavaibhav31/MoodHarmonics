@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchPlaylist, audioUrlFor } from '../lib/api.js';
 import TileCard from '../components/TileCard.jsx';
 
@@ -33,18 +33,41 @@ export default function Playlist() {
       {loading ? (
         <div className="opacity-80">Loading…</div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {items.map((item, idx) => (
-            <TileCard
-              key={(item.filename || item.title || 'p') + idx}
-              item={item}
-              onPlay={onPlay}
-              onLyrics={(it)=>alert(it.lyrics || 'No lyrics.')}
-              onAddToPlaylist={()=>alert('Already in playlist (mock)')}
-            />
-          ))}
-        </div>
-      )}
+        <GenreSections items={items} onPlay={onPlay} />)
+      }
+    </div>
+  );
+}
+
+function GenreSections({ items, onPlay }) {
+  const byGenre = useMemo(() => {
+    const map = new Map();
+    for (const it of items) {
+      const g = (it.genre || 'Uncategorized').trim();
+      if (!map.has(g)) map.set(g, []);
+      map.get(g).push(it);
+    }
+    return Array.from(map.entries()).sort(([a],[b]) => a.localeCompare(b));
+  }, [items]);
+
+  return (
+    <div className="space-y-8">
+      {byGenre.map(([genre, list]) => (
+        <section key={genre}>
+          <h3 className="text-lg font-semibold mb-3 opacity-90">{genre}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {list.map((item, idx) => (
+              <TileCard
+                key={(item.filename || item.title || genre) + idx}
+                item={item}
+                onPlay={onPlay}
+                onLyrics={(it)=>alert(it.lyrics || 'No lyrics.')}
+                onAddToPlaylist={()=>alert('Already in playlist (mock)')}
+              />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

@@ -30,8 +30,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Global gradient background covering full viewport */}
-      <div className="fixed inset-0 -z-10 gradient-hero" aria-hidden />
+      {/* Global gradient + aurora background covering full viewport */}
+      <div className="fixed inset-0 -z-10 gradient-hero aurora" aria-hidden />
       <TopNav theme={theme} setTheme={setTheme} />
 
       <main className={`flex-1 ${onLanding ? 'p-0' : 'p-6'}`}>
@@ -73,6 +73,18 @@ export default function App() {
       {!onLanding && <MiniPlayer />}
     </div>
   );
+}
+
+// Track cursor to update aurora CSS variables
+if (typeof window !== 'undefined') {
+  window.addEventListener('mousemove', (e) => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const mx = e.clientX - cx;
+    const my = e.clientY - cy;
+    document.documentElement.style.setProperty('--mx', `${mx}`);
+    document.documentElement.style.setProperty('--my', `${my}`);
+  }, { passive: true });
 }
 
 
