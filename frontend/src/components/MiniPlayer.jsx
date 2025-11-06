@@ -31,8 +31,19 @@ export default function MiniPlayer() {
       });
       setIsPlaying(true);
     }
+    function onPlayNow(e) {
+      const entry = e.detail;
+      if (!entry) return;
+      setQueue([entry]);
+      setIndex(0);
+      setIsPlaying(true);
+    }
     window.addEventListener('mh:add-to-queue', onAddToQueue);
-    return () => window.removeEventListener('mh:add-to-queue', onAddToQueue);
+    window.addEventListener('mh:play-now', onPlayNow);
+    return () => {
+      window.removeEventListener('mh:add-to-queue', onAddToQueue);
+      window.removeEventListener('mh:play-now', onPlayNow);
+    };
   }, []);
 
   useEffect(() => {

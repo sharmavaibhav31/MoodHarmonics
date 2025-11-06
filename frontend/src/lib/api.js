@@ -26,6 +26,13 @@ export async function generateMusic(prompt) {
   return data;
 }
 
+// For UI 'lyrics only' button, we reuse /generate and just consume the lyrics.
+// Backend always saves an audio and playlist entry; the UI can choose not to enqueue.
+export async function generateLyrics(prompt) {
+  const { data } = await api.post('/generate', { prompt });
+  return data;
+}
+
 export async function uploadAudio(file) {
   const formData = new FormData();
   formData.append('file', file);

@@ -25,7 +25,7 @@ export default function Playlist() {
   }, []);
 
   function onPlay(item) {
-    window.dispatchEvent(new CustomEvent('mh:add-to-queue', { detail: item }));
+    window.dispatchEvent(new CustomEvent('mh:play-now', { detail: item }));
   }
 
   return (

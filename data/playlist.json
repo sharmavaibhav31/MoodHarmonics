@@ -1,5 +1,43 @@
 [
   {
+    "id": "bac10fbc",
+    "filename": "uploaded_20251106_211134_bac10fbc.wav",
+    "title": "generated_music",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "country",
+    "genre_confidence": 0.5576038360595703,
+    "created_at": "20251106_211134"
+  },
+  {
+    "id": "f473faae",
+    "filename": "uploaded_20251106_201657_f473faae.wav",
+    "title": "jazz_song",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "classical",
+    "genre_confidence": 0.9023140668869019,
+    "created_at": "20251106_201657"
+  },
+  {
+    "id": "952751c5",
+    "filename": "generated_20251106_201509_952751c5.wav",
+    "prompt": "Energetic EDM track with punchy bass and bright synths",
+    "lyrics": "Energetic EDM track with punchy bass and bright synths.\n\n\n[1st person view] \u2013 \"Energetic EDM track with punchy bass and bright synths.\"\n\n\n[1st person view] \u2013 \"Energetic EDM track with punchy bass and bright synths.\"\n\n[2nd person view] \u2013 \"Energetic EDM track with punchy bass and bright synths.\"\n\n\n[2nd person view] \u2013 \"Energetic EDM track with punchy bass and bright synths.\"\n\n\n[2nd person view] \u2013 \"Energetic EDM track with punchy",
+    "genre": "rock",
+    "genre_confidence": 0.9476923942565918,
+    "created_at": "20251106_201509"
+  },
+  {
+    "id": "a60b1e72",
+    "filename": "generated_20251106_200613_a60b1e72.wav",
+    "prompt": "Indie pop vibe with guitar riffs and catchy hooks",
+    "lyrics": "Indie pop vibe with guitar riffs and catchy hooks that make you feel as if you're about to climb the giant tree on the left side of the room. And they're not just a bunch of riffs. They're songs that tell the story of life, love and death.\n\nAnd now we turn to another group of songs that should go straight to the heart of every single song on The Dark Side of the Moon. \"You're My Man\" is a song that says, \"You're the only man on Earth I can trust to stand up for me. And I'm waiting for you.\" There are many of them on the",
+    "genre": "metal",
+    "genre_confidence": 0.5403295159339905,
+    "created_at": "20251106_200613"
+  },
+  {
     "id": "80a227ee",
     "filename": "generated_20251106_195729_80a227ee.wav",
     "prompt": "Moody cinematic strings with slow build and percussion",

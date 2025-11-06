@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DarkVeil from '../components/DarkVeil.jsx';
-import { generateMusic, fetchPlaylist, audioUrlFor } from '../lib/api.js';
+import { generateMusic, fetchPlaylist, audioUrlFor, generateLyrics, uploadAudio } from '../lib/api.js';
 
 const RANDOM_PROMPTS = [
   'Lo-fi chill beat with soft piano and rain ambience',
@@ -14,7 +14,11 @@ export default function Compose() {
   const [loading, setLoading] = useState(false);
   const [entry, setEntry] = useState(null);
   const [lyrics, setLyrics] = useState('');
+  const [lyricsLoading, setLyricsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState('');
+  const [uploadGenre, setUploadGenre] = useState('');
 
   async function handleGenerate() {
     if (!prompt.trim()) return;
@@ -52,6 +56,21 @@ export default function Compose() {
       setProgress(1);
       setLoading(false);
       setTimeout(() => setProgress(0), 600);
+    }
+  }
+
+  async function handleGenerateLyrics() {
+    if (!prompt.trim()) return;
+    setLyricsLoading(true);
+    try {
+      const res = await generateLyrics(prompt.trim());
+      const item = res?.entry || res;
+      setLyrics(item?.lyrics || '');
+      // Do not enqueue or refresh library here.
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLyricsLoading(false);
     }
   }
 
@@ -94,6 +113,9 @@ export default function Compose() {
           <button onClick={handleGenerate} className="btn-primary h-11 px-6" disabled={loading}>
             {loading ? 'Generating…' : 'Generate'}
           </button>
+          <button onClick={handleGenerateLyrics} className="glass h-11 px-4 rounded-card focus-ring" disabled={lyricsLoading}>
+            {lyricsLoading ? 'Lyrics…' : 'Generate Lyrics'}
+          </button>
           <button onClick={randomize} className="glass h-11 px-4 rounded-card focus-ring">Random prompt</button>
         </div>
       </div>
@@ -116,6 +138,40 @@ export default function Compose() {
           </div>
         </div>
       )}
+      {/* Upload section for genre prediction */}
+      <div className="card p-6 mt-6">
+        <h3 className="text-xl font-semibold">Upload audio for genre prediction</h3>
+        <p className="opacity-80 text-sm mt-1">Select a local audio file. It will appear in Library and Playlist under its predicted genre.</p>
+        <div className="mt-4 flex items-center gap-3">
+          <label className="glass rounded-card h-11 px-4 cursor-pointer flex items-center focus-ring">
+            {uploading ? 'Uploading…' : 'Choose file'}
+            <input type="file" accept="audio/*" className="hidden" onChange={async (e)=>{
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setUploading(true);
+              setUploadMsg('');
+              setUploadGenre('');
+              try {
+                const res = await uploadAudio(file);
+                const genre = res?.entry?.genre || '';
+                setUploadMsg('Uploaded successfully');
+                if (genre) setUploadGenre(genre);
+                await fetchPlaylist().catch(()=>{});
+              } catch (err) {
+                console.error(err);
+                setUploadMsg('Upload failed');
+              } finally {
+                setUploading(false);
+                e.target.value='';
+              }
+            }} />
+          </label>
+          <div className="text-sm opacity-90">
+            {uploadMsg && <span>{uploadMsg}</span>}
+            {uploadGenre && <span className="ml-3">Predicted genre: <span className="font-semibold capitalize">{uploadGenre}</span></span>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
