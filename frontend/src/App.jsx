@@ -14,6 +14,7 @@ import { isAuthed } from './lib/auth.js';
 export default function App() {
   const location = useLocation();
   const onLanding = location.pathname === '/';
+  const onLogin = location.pathname === '/login';
   const [theme, setTheme] = useState(() => localStorage.getItem('mh_theme') || 'dark');
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {!onLanding && <MiniPlayer />}
+      {!onLanding && !onLogin && <MiniPlayer />}
     </div>
   );
 }

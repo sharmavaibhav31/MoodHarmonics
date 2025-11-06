@@ -61,8 +61,19 @@ export default function Compose() {
 
   return (
     <div className="max-w-5xl mx-auto relative">
-      <div style={{ width: '100%', height: '600px', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
+      <div style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
         <DarkVeil />
+        <div
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(to bottom, rgba(90,0,150,0.4), rgba(10,10,20,1))',
+    zIndex: -1,
+  }}
+/>
       </div>
       <div className="card p-6">
         <h2 className="text-2xl font-semibold">Compose</h2>

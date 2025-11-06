@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import GridScan from '../components/GridScan.jsx';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { login } from '../lib/auth.js';
 
@@ -26,7 +27,34 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-12 card p-6">
+    <div className="relative">
+      {/* Animated background */}
+      <div style={{
+        width: '100%',
+        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}>
+        <GridScan
+          sensitivity={0.55}
+          lineThickness={1}
+          linesColor="#392e4e"
+          gridScale={0.1}
+          scanColor="#FF9FFC"
+          scanOpacity={0.4}
+          enablePost
+          bloomIntensity={0.6}
+          chromaticAberration={0.002}
+          noiseIntensity={0.01}
+          useWindowCursor
+        />
+      </div>
+
+      <div className="max-w-md mx-auto mt-12 card p-6 relative z-10">
       <h2 className="text-2xl font-semibold">Login</h2>
       <p className="mt-1 text-sm opacity-80">Use test@test.com / test123</p>
       <form className="mt-6 space-y-4" onSubmit={handleLogin}>
@@ -58,6 +86,7 @@ export default function Login() {
       </form>
       <div className="mt-6 text-sm">
         No account? <Link to="#" onClick={()=>setMessage('Account created — please login')} className="underline">Signup</Link>
+      </div>
       </div>
     </div>
   );
