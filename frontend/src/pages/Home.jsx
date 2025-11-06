@@ -1,10 +1,36 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import GridScan from '../components/GridScan.jsx';
 
 export default function Home() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 gradient-hero" />
+    <section className="relative">
+      <div style={{
+          width: '100%',
+          height: '100vh',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          pointerEvents: 'none',
+          zIndex: -1,
+      }}>
+
+        <GridScan
+          sensitivity={0.55}
+          lineThickness={1}
+          linesColor="#392e4e"
+          gridScale={0.1}
+          scanColor="#FF9FFC"
+          scanOpacity={0.4}
+          enablePost
+          bloomIntensity={0.6}
+          chromaticAberration={0.002}
+          noiseIntensity={0.01}
+          useWindowCursor
+        />
+      </div>
       <div className="relative max-w-5xl mx-auto px-6 py-28 text-center">
         <motion.h1
           className="text-5xl md:text-6xl font-extrabold tracking-tight"

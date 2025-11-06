@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchPlaylist, audioUrlFor } from '../lib/api.js';
 import TileCard from '../components/TileCard.jsx';
+import DarkVeil from '../components/DarkVeil.jsx';
 
 export default function Playlist() {
   const [items, setItems] = useState([]);
@@ -28,7 +29,10 @@ export default function Playlist() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto relative">
+      <div style={{ width: '100%', height: '600px', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <DarkVeil />
+      </div>
       <h2 className="text-2xl font-semibold mb-4">Playlist</h2>
       {loading ? (
         <div className="opacity-80">Loading…</div>

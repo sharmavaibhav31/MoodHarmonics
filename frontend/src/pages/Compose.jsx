@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DarkVeil from '../components/DarkVeil.jsx';
 import { generateMusic, fetchPlaylist, audioUrlFor } from '../lib/api.js';
 
 const RANDOM_PROMPTS = [
@@ -59,7 +60,10 @@ export default function Compose() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto relative">
+      <div style={{ width: '100%', height: '600px', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <DarkVeil />
+      </div>
       <div className="card p-6">
         <h2 className="text-2xl font-semibold">Compose</h2>
         <p className="opacity-80 text-sm mt-1">Describe the music you want to generate.</p>

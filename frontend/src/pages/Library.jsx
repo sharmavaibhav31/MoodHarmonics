@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchPlaylist, audioUrlFor, uploadAudio } from '../lib/api.js';
 import TileCard from '../components/TileCard.jsx';
+import DarkVeil from '../components/DarkVeil.jsx';
 
 export default function Library() {
   const [items, setItems] = useState([]);
@@ -52,7 +53,10 @@ export default function Library() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto relative">
+      <div style={{ width: '100%', height: '600px', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <DarkVeil />
+      </div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold">Your Library</h2>
         <label className="btn-primary h-10 px-4 cursor-pointer">
