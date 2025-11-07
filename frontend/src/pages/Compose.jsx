@@ -7,6 +7,16 @@ const RANDOM_PROMPTS = [
   'Energetic EDM track with punchy bass and bright synths',
   'Moody cinematic strings with slow build and percussion',
   'Indie pop vibe with guitar riffs and catchy hooks',
+  'A soulful jazz track with a modern twist',
+  'A cinematic score with an epic, orchestral feel',
+  'Upbeat electronic house music with tropical influences',
+  'A melancholy yet hopeful tone with a calming rhythm',
+  'Dark and moody with a touch of mystery',
+  'Joyful, uplifting, and energetic—perfect for a summer party',
+  'Generate a retro-inspired synthwave track with a driving 80s-style bassline, shimmering analog synths, and pulsating beats. Add a bright, uplifting melody with a steady tempo to evoke a nostalgic yet futuristic vibe'
+
+
+
 ];
 
 export default function Compose() {

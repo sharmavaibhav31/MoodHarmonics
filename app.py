@@ -39,12 +39,27 @@ except Exception as e:
     music_model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-small")
 
 try:
-    lyrics_tokenizer = AutoTokenizer.from_pretrained(GPT2_DIR, local_files_only=True)
-    lyrics_model = AutoModelForCausalLM.from_pretrained(GPT2_DIR, local_files_only=True)
-except Exception as e:
-    print("Local GPT-2 failed, falling back to public gpt2:", e)
-    lyrics_tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    lyrics_model = AutoModelForCausalLM.from_pretrained("gpt2")
+    print("Loading fine-tuned lyrics model: smgriffin/pop-lyrics-generator-v1 ...")
+    lyrics_tokenizer = AutoTokenizer.from_pretrained("smgriffin/pop-lyrics-generator-v1")
+    lyrics_model = AutoModelForCausalLM.from_pretrained("smgriffin/pop-lyrics-generator-v1")
+    print("Loaded fine-tuned lyrics model: smgriffin/pop-lyrics-generator-v1")
+except Exception as e1:
+    try:
+        print("Failed to load smgriffin model:", e1)
+        print("Trying backup model: SpartanCinder/GPT2-finetuned-lyric-generation ...")
+        lyrics_tokenizer = AutoTokenizer.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
+        lyrics_model = AutoModelForCausalLM.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
+        print("Loaded backup fine-tuned model: SpartanCinder/GPT2-finetuned-lyric-generation")
+    except Exception as e2:
+        print("Fine-tuned models failed; trying local GPT-2:", e2)
+        try:
+            lyrics_tokenizer = AutoTokenizer.from_pretrained(GPT2_DIR, local_files_only=True)
+            lyrics_model = AutoModelForCausalLM.from_pretrained(GPT2_DIR, local_files_only=True)
+            print("Loaded local GPT-2 from:", GPT2_DIR)
+        except Exception as e3:
+            print("Local GPT-2 failed; falling back to public gpt2:", e3)
+            lyrics_tokenizer = AutoTokenizer.from_pretrained("gpt2")
+            lyrics_model = AutoModelForCausalLM.from_pretrained("gpt2")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 music_model = music_model.to(device)
@@ -140,12 +155,14 @@ def generate():
         if not prompt:
             return jsonify({"error": "Prompt missing"}), 400
 
-        # Lyrics
-        lyric_inputs = lyrics_tokenizer(prompt, return_tensors="pt").to(device)
+        # Lyrics (prompt engineered for song-style output)
+        prompt_text = f"Write creative song lyrics in the style of {prompt}.\nLyrics:\n"
+        lyric_inputs = lyrics_tokenizer(prompt_text, return_tensors="pt").to(device)
         lyric_outputs = lyrics_model.generate(
             **lyric_inputs,
-            max_new_tokens=120,
-            temperature=0.8,
+            max_new_tokens=200,
+            temperature=0.9,
+            top_p=0.9,
             do_sample=True,
             pad_token_id=lyrics_tokenizer.eos_token_id
         )
