@@ -97,8 +97,9 @@ export default function DarkVeil({
 
     const resize = () => {
       const w = parent.clientWidth, h = parent.clientHeight;
-      renderer.setSize(w * resolutionScale, h * resolutionScale);
+      renderer.setSize(w * resolutionScale * 1.2, h * resolutionScale);
       program.uniforms.uResolution.value.set(w, h);
+      
     };
     window.addEventListener('resize', resize);
     resize();
