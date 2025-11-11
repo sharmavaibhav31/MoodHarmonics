@@ -13,8 +13,8 @@ export default function TopNav({ theme, setTheme }) {
     <header className="sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/" className="text-xl font-semibold tracking-tight">🎵 AI-Based Music Composer</Link>
-          <nav className="hidden md:flex items-center gap-4 ml-6 text-sm">
+          <Link to="/" className="text-2xl font-semibold tracking-tight">🎵 AI-Based Music Composer</Link>
+          <nav className="hidden md:flex items-center gap-4 ml-6 text-base">
             <NavItem to="/">Home</NavItem>
             <NavItem to="/compose">Compose</NavItem>
             <NavItem to="/library">Library</NavItem>
