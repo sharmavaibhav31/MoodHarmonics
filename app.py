@@ -50,17 +50,17 @@ except Exception as e:
     music_model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-small")
 
 try:
-    print("Loading fine-tuned lyrics model: smgriffin/pop-lyrics-generator-v1 ...")
-    lyrics_tokenizer = AutoTokenizer.from_pretrained("smgriffin/pop-lyrics-generator-v1")
-    lyrics_model = AutoModelForCausalLM.from_pretrained("smgriffin/pop-lyrics-generator-v1")
-    print("Loaded fine-tuned lyrics model: smgriffin/pop-lyrics-generator-v1")
+    print("Loading fine-tuned lyrics model: SpartanCinder/GPT2-finetuned-lyric-generation ...")
+    lyrics_tokenizer = AutoTokenizer.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
+    lyrics_model = AutoModelForCausalLM.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
+    print("Loaded fine-tuned lyrics model: SpartanCinder/GPT2-finetuned-lyric-generation")
 except Exception as e1:
     try:
-        print("Failed to load smgriffin model:", e1)
-        print("Trying backup model: SpartanCinder/GPT2-finetuned-lyric-generation ...")
-        lyrics_tokenizer = AutoTokenizer.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
-        lyrics_model = AutoModelForCausalLM.from_pretrained("SpartanCinder/GPT2-finetuned-lyric-generation")
-        print("Loaded backup fine-tuned model: SpartanCinder/GPT2-finetuned-lyric-generation")
+        print("Failed to load SpartanCinder model:", e1)
+        print("Trying backup model: smgriffin/pop-lyrics-generator-v1 ...")
+        lyrics_tokenizer = AutoTokenizer.from_pretrained("smgriffin/pop-lyrics-generator-v1")
+        lyrics_model = AutoModelForCausalLM.from_pretrained("smgriffin/pop-lyrics-generator-v1")
+        print("Loaded backup fine-tuned model: smgriffin/pop-lyrics-generator-v1")
     except Exception as e2:
         print("Fine-tuned models failed; trying local GPT-2:", e2)
         try:
@@ -160,17 +160,40 @@ def generate():
             return jsonify({"error": "Prompt missing"}), 400
 
         # Lyrics (prompt engineered for song-style output)
-        prompt_text = f"Write creative song lyrics in the style of {prompt}.\nLyrics:\n"
-        lyric_inputs = lyrics_tokenizer(prompt_text, return_tensors="pt").to(device)
-        lyric_outputs = lyrics_model.generate(
-            **lyric_inputs,
-            max_new_tokens=200,
-            temperature=0.9,
-            top_p=0.9,
-            do_sample=True,
-            pad_token_id=lyrics_tokenizer.eos_token_id
-        )
-        lyrics = lyrics_tokenizer.decode(lyric_outputs[0], skip_special_tokens=True)
+        lyrics = ""
+        description = None
+        try:
+            prompt_text = f"Write creative song lyrics in the style of {prompt}.\nLyrics:\n"
+            lyric_inputs = lyrics_tokenizer(prompt_text, return_tensors="pt").to(device)
+            lyric_outputs = lyrics_model.generate(
+                **lyric_inputs,
+                max_new_tokens=200,
+                temperature=0.9,
+                top_p=0.9,
+                do_sample=True,
+                pad_token_id=lyrics_tokenizer.eos_token_id
+            )
+            lyrics = lyrics_tokenizer.decode(lyric_outputs[0], skip_special_tokens=True).strip()
+        except Exception as ly_e:
+            print("Lyrics generation failed, will try description fallback:", ly_e)
+            lyrics = ""
+        # Fallback to description if lyrics not generated
+        if not lyrics:
+            try:
+                desc_prompt = f"Write a concise, evocative 2-3 sentence description of a song inspired by '{prompt}'."
+                desc_inputs = lyrics_tokenizer(desc_prompt, return_tensors="pt").to(device)
+                desc_outputs = lyrics_model.generate(
+                    **desc_inputs,
+                    max_new_tokens=120,
+                    temperature=0.8,
+                    top_p=0.9,
+                    do_sample=True,
+                    pad_token_id=lyrics_tokenizer.eos_token_id
+                )
+                description = lyrics_tokenizer.decode(desc_outputs[0], skip_special_tokens=True).strip()
+            except Exception as desc_e:
+                print("Description fallback failed:", desc_e)
+                description = "Instrumental piece inspired by the given prompt."
 
         # Music
         music_inputs = music_processor(text=prompt, padding=True, return_tensors="pt").to(device)
@@ -197,6 +220,8 @@ def generate():
             "created_at": ts,
             "user_id": data.get("user_id", None)
         }
+        if description:
+            entry["description"] = description
         songs_collection.insert_one(entry)
         
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import DarkVeil from '../components/DarkVeil.jsx';
 import { generateMusic, fetchPlaylist, audioUrlFor, generateLyrics, uploadAudio } from '../lib/api.js';
+import { getPlaceholderCover, getRandomCover } from '../lib/placeholders.js';
+import { useMemo } from 'react';
 
 const RANDOM_PROMPTS = [
   'Lo-fi chill beat with soft piano and rain ambience',
@@ -98,6 +100,12 @@ export default function Compose() {
     setPrompt(RANDOM_PROMPTS[Math.floor(Math.random() * RANDOM_PROMPTS.length)]);
   }
 
+  // Choose a random banner per composition
+  const compositionBanner = useMemo(()=>{
+    if (!entry) return null;
+    return getRandomCover();
+  }, [entry?.id, entry?.filename, entry?.prompt]);
+
   return (
     <div className="max-w-5xl mx-auto relative">
       <div style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, pointerEvents: 'none', zIndex: 0 }}>
@@ -193,6 +201,29 @@ export default function Compose() {
           </div>
         </div>
       </div>
+      {entry && (
+        <div className="card mt-6">
+          <h3 className="text-2xl font-semibold">Composition successful</h3>
+          <div className="mt-4 grid md:grid-cols-[220px,1fr] gap-5 items-start">
+            <div className="w-full">
+              <div className="aspect-[4/3] w-full overflow-hidden rounded-card">
+                <img
+                  src={compositionBanner || getPlaceholderCover(entry.prompt || entry.title || entry.id)}
+                  alt="Composition banner"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="text-xl font-semibold truncate">{entry.prompt || entry.title || 'Untitled composition'}</div>
+              <div className="mt-3 whitespace-pre-wrap text-base opacity-90 leading-relaxed">
+                {lyrics || entry?.description || 'No lyrics or description available.'}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
