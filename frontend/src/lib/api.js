@@ -42,9 +42,7 @@ export async function uploadAudio(file, userId) {
   if (userId) {
     formData.append('user_id', userId);
   }
-  const { data } = await api.post('/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const { data } = await api.post('/upload', formData);
   if (data?.entry) data.entry = attachCover(data.entry);
   return data;
 }

@@ -11,6 +11,7 @@ import numpy as np
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+from bson import ObjectId 
 
 # Load environment variables
 load_dotenv()
@@ -197,6 +198,7 @@ def generate():
             "user_id": data.get("user_id", None)
         }
         songs_collection.insert_one(entry)
+        
 
         return jsonify({"ok": True, "entry": entry})
 
@@ -226,12 +228,18 @@ def upload_file():
         f.save(outpath)
 
         # classify genre
-        genre, conf = classify_genre_from_file(outpath)
+        try:
+            genre, conf = classify_genre_from_file(outpath)
+        except Exception as e:
+            print(f"Genre classification failed: {e}")
+            genre, conf = "unknown", 0.0
 
         # optional fields
         title = request.form.get("title") or os.path.splitext(f.filename)[0]
         lyrics = request.form.get("lyrics", "")
         user_id = request.form.get("user_id")
+        if user_id:
+            user_id = str(user_id)
 
         entry = {
             "id": uid,
@@ -240,11 +248,12 @@ def upload_file():
             "prompt": "",   # blank for upload
             "lyrics": lyrics,
             "genre": genre,
-            "genre_confidence": conf,
+            "genre_confidence": float(conf),
             "created_at": ts,
             "user_id": user_id
         }
-        songs_collection.insert_one(entry)
+        result = songs_collection.insert_one(entry)
+        entry["_id"] = str(result.inserted_id)
         return jsonify({"ok": True, "entry": entry})
     except Exception as e:
         traceback.print_exc()
