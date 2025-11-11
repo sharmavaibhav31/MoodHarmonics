@@ -16,12 +16,31 @@ export default function App() {
   const onLanding = location.pathname === '/';
   const onLogin = location.pathname === '/login';
   const [theme, setTheme] = useState(() => localStorage.getItem('mh_theme') || 'dark');
+  const [activeGeneration, setActiveGeneration] = useState(null);
 
   useEffect(() => {
     if (theme === 'dark') document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
     localStorage.setItem('mh_theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('mh_active_generation');
+      if (stored) setActiveGeneration(JSON.parse(stored));
+    } catch (e) {
+      console.error('Could not parse active generation from localStorage', e);
+    }
+
+    const onStart = (e) => setActiveGeneration(e.detail);
+    const onFinish = () => setActiveGeneration(null);
+    window.addEventListener('mh:generation-started', onStart);
+    window.addEventListener('mh:generation-finished', onFinish);
+    return () => {
+      window.removeEventListener('mh:generation-started', onStart);
+      window.removeEventListener('mh:generation-finished', onFinish);
+    };
+  }, []);
 
   const pageVariants = useMemo(() => ({
     initial: { opacity: 0, y: 8 },
@@ -71,7 +90,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {!onLanding && !onLogin && <MiniPlayer />}
+      {!onLanding && !onLogin && <MiniPlayer activeGeneration={activeGeneration} />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
-# Music Hub Frontend (React + Vite)
+# AI-Based Music Composer Frontend (React + Vite)
 
-This is the React single-page app for the Music Hub project. It talks to the existing Flask backend and uses Tailwind + Framer Motion for a modern, animated UI.
+This is the React single-page app for the AI-Based Music Composer project. It talks to the existing Flask backend and uses Tailwind + Framer Motion for a modern, animated UI.
 
 ## Quick start
 

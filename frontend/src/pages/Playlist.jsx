@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fetchPlaylist, audioUrlFor } from '../lib/api.js';
+import { fetchPlaylist, audioUrlFor, deleteEntry } from '../lib/api.js';
 import TileCard from '../components/TileCard.jsx';
 import DarkVeil from '../components/DarkVeil.jsx';
 
@@ -48,13 +48,20 @@ export default function Playlist() {
       {loading ? (
         <div className="opacity-80">Loading…</div>
       ) : (
-        <GenreSections items={items} onPlay={onPlay} />)
+        <GenreSections items={items} onPlay={onPlay} onDelete={async (entry) => {
+          try {
+            await deleteEntry(entry.id || entry.filename);
+            setItems((prev) => prev.filter((it) => (it.id || it.filename) !== (entry.id || entry.filename)));
+          } catch (err) {
+            console.error(err);
+          }
+        }} />)
       }
     </div>
   );
 }
 
-function GenreSections({ items, onPlay }) {
+function GenreSections({ items, onPlay, onDelete }) {
   const byGenre = useMemo(() => {
     const map = new Map();
     for (const it of items) {
@@ -78,6 +85,7 @@ function GenreSections({ items, onPlay }) {
                 onPlay={onPlay}
                 onLyrics={(it)=>alert(it.lyrics || 'No lyrics.')}
                 onAddToPlaylist={()=>alert('Already in playlist (mock)')}
+                onDelete={onDelete}
               />
             ))}
           </div>

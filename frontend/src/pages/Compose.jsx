@@ -14,9 +14,6 @@ const RANDOM_PROMPTS = [
   'Dark and moody with a touch of mystery',
   'Joyful, uplifting, and energetic—perfect for a summer party',
   'Generate a retro-inspired synthwave track with a driving 80s-style bassline, shimmering analog synths, and pulsating beats. Add a bright, uplifting melody with a steady tempo to evoke a nostalgic yet futuristic vibe'
-
-
-
 ];
 
 export default function Compose() {
@@ -36,6 +33,17 @@ export default function Compose() {
     setEntry(null);
     setLyrics('');
     setProgress(0);
+
+    const generationState = {
+      taskId: `task_${Date.now()}`,
+      prompt: prompt.trim(),
+      startedAt: Date.now(),
+      progress: 0,
+    };
+    localStorage.setItem('mh_active_generation', JSON.stringify(generationState));
+    window.dispatchEvent(new CustomEvent('mh:generation-started', { detail: generationState }));
+
+
     let rafId;
     // Indeterminate-ish progress while backend works
     const startTime = Date.now();
@@ -66,6 +74,8 @@ export default function Compose() {
       setProgress(1);
       setLoading(false);
       setTimeout(() => setProgress(0), 600);
+      localStorage.removeItem('mh_active_generation');
+      window.dispatchEvent(new CustomEvent('mh:generation-finished'));
     }
   }
 
@@ -104,9 +114,9 @@ export default function Compose() {
   }}
 />
       </div>
-      <div className="card p-6">
-        <h2 className="text-2xl font-semibold">Compose</h2>
-        <p className="opacity-80 text-sm mt-1">Describe the music you want to generate.</p>
+      <div className="card">
+        <h2 className="text-3xl md:text-4xl font-semibold">Compose</h2>
+        <p className="opacity-80 text-base mt-2">Describe the music you want to generate.</p>
         {/* Progress bar */}
         <div className={`mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden transition-opacity ${loading || progress > 0 ? 'opacity-100' : 'opacity-0'}`} aria-hidden={!loading}>
           <div className="h-full bg-gradient-to-r from-teal-400 via-blue-500 to-fuchsia-500 transition-[width] duration-200" style={{ width: `${Math.round(progress * 100)}%` }} />
@@ -119,29 +129,29 @@ export default function Compose() {
             placeholder="A dreamy ambient pad with evolving textures..."
           />
         </div>
-        <div className="mt-3 flex gap-3">
-          <button onClick={handleGenerate} className="btn-primary h-11 px-6" disabled={loading}>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button onClick={handleGenerate} className="btn-primary h-12 px-7 text-base" disabled={loading}>
             {loading ? 'Generating…' : 'Generate'}
           </button>
-          <button onClick={handleGenerateLyrics} className="glass h-11 px-4 rounded-card focus-ring" disabled={lyricsLoading}>
+          <button onClick={handleGenerateLyrics} className="glass h-12 px-6 rounded-card focus-ring text-base" disabled={lyricsLoading}>
             {lyricsLoading ? 'Lyrics…' : 'Generate Lyrics'}
           </button>
-          <button onClick={randomize} className="glass h-11 px-4 rounded-card focus-ring">Random prompt</button>
+          <button onClick={randomize} className="glass h-12 px-6 rounded-card focus-ring text-base">Random prompt</button>
         </div>
       </div>
 
       {entry && (
         <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <div className="card p-5">
-            <div className="text-lg font-semibold">Lyrics</div>
-            <pre className="mt-3 whitespace-pre-wrap text-sm opacity-90">{lyrics || 'No lyrics returned.'}</pre>
+          <div className="card">
+            <div className="text-2xl font-semibold">Lyrics</div>
+            <pre className="mt-4 whitespace-pre-wrap text-base opacity-90 leading-relaxed">{lyrics || 'No lyrics returned.'}</pre>
           </div>
-          <div className="card p-5">
-            <div className="text-lg font-semibold">Preview</div>
-            <audio className="w-full mt-3" controls src={entry.audio_url} />
-            <div className="mt-2 text-sm opacity-80 truncate">{entry.title}</div>
-            <div className="mt-4">
-              <a className="btn-primary px-4 h-10" href={entry.audio_url} download>
+          <div className="card">
+            <div className="text-2xl font-semibold">Preview</div>
+            <audio className="w-full mt-4" controls src={entry.audio_url} />
+            <div className="mt-3 text-base opacity-80 truncate">{entry.title}</div>
+            <div className="mt-5">
+              <a className="btn-primary px-5 h-12 text-base" href={entry.audio_url} download>
                 Download
               </a>
             </div>
@@ -149,11 +159,11 @@ export default function Compose() {
         </div>
       )}
       {/* Upload section for genre prediction */}
-      <div className="card p-6 mt-6">
-        <h3 className="text-xl font-semibold">Upload audio for genre prediction</h3>
-        <p className="opacity-80 text-sm mt-1">Select a local audio file. It will appear in Library and Playlist under its predicted genre.</p>
+      <div className="card mt-6">
+        <h3 className="text-2xl font-semibold">Upload audio for genre prediction</h3>
+        <p className="opacity-80 text-base mt-2">Select a local audio file. It will appear in Library and Playlist under its predicted genre.</p>
         <div className="mt-4 flex items-center gap-3">
-          <label className="glass rounded-card h-11 px-4 cursor-pointer flex items-center focus-ring">
+          <label className="glass rounded-card h-12 px-6 cursor-pointer flex items-center focus-ring text-base">
             {uploading ? 'Uploading…' : 'Choose file'}
             <input type="file" accept="audio/*" className="hidden" onChange={async (e)=>{
               const file = e.target.files?.[0];
@@ -162,7 +172,8 @@ export default function Compose() {
               setUploadMsg('');
               setUploadGenre('');
               try {
-                const res = await uploadAudio(file);
+                const userId = localStorage.getItem('mh_user_id');
+                const res = await uploadAudio(file, userId);
                 const genre = res?.entry?.genre || '';
                 setUploadMsg('Uploaded successfully');
                 if (genre) setUploadGenre(genre);
@@ -176,7 +187,7 @@ export default function Compose() {
               }
             }} />
           </label>
-          <div className="text-sm opacity-90">
+          <div className="text-base opacity-90">
             {uploadMsg && <span>{uploadMsg}</span>}
             {uploadGenre && <span className="ml-3">Predicted genre: <span className="font-semibold capitalize">{uploadGenre}</span></span>}
           </div>

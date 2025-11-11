@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchPlaylist, audioUrlFor, uploadAudio } from '../lib/api.js';
+import { fetchPlaylist, audioUrlFor, uploadAudio, deleteEntry } from '../lib/api.js';
 import TileCard from '../components/TileCard.jsx';
 import DarkVeil from '../components/DarkVeil.jsx';
 
@@ -87,6 +87,15 @@ export default function Library() {
               onPlay={onPlay}
               onLyrics={(it)=>alert(it.lyrics || 'No lyrics.')}
               onAddToPlaylist={()=>alert('Added to playlist (mock)')}
+              onDelete={async (entry) => {
+                try {
+                  await deleteEntry(entry.id || entry.filename);
+                  await load();
+                } catch (err) {
+                  console.error(err);
+                  setError('Delete failed');
+                }
+              }}
             />
           ))}
         </div>

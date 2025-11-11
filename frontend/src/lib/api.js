@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { attachCover } from './placeholders.js';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -23,6 +24,7 @@ api.interceptors.response.use(
 
 export async function generateMusic(prompt) {
   const { data } = await api.post('/generate', { prompt });
+  if (data?.entry) data.entry = attachCover(data.entry);
   return data;
 }
 
@@ -30,20 +32,49 @@ export async function generateMusic(prompt) {
 // Backend always saves an audio and playlist entry; the UI can choose not to enqueue.
 export async function generateLyrics(prompt) {
   const { data } = await api.post('/generate', { prompt });
+  if (data?.entry) data.entry = attachCover(data.entry);
   return data;
 }
 
-export async function uploadAudio(file) {
+export async function uploadAudio(file, userId) {
   const formData = new FormData();
   formData.append('file', file);
+  if (userId) {
+    formData.append('user_id', userId);
+  }
   const { data } = await api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
+  if (data?.entry) data.entry = attachCover(data.entry);
   return data;
 }
 
 export async function fetchPlaylist() {
   const { data } = await api.get('/api/playlist');
+  if (Array.isArray(data)) {
+    return data.map((entry) => attachCover(entry));
+  }
+  if (Array.isArray(data?.playlist)) {
+    return {
+      ...data,
+      playlist: data.playlist.map((entry) => attachCover(entry)),
+    };
+  }
+  return data;
+}
+
+export async function deleteEntry(id) {
+  const { data } = await api.delete(`/api/playlist/${id}`);
+  return data;
+}
+
+export async function login(email, password) {
+  const { data } = await api.post('/login', { email, password });
+  return data;
+}
+
+export async function register(email, password) {
+  const { data } = await api.post('/register', { email, password });
   return data;
 }
 

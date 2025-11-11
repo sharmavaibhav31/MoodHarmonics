@@ -8,11 +8,25 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import librosa
 import numpy as np
+from pymongo import MongoClient
+from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+
+# MongoDB Connection
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client['moodharmonics']
+users_collection = db['users']
+songs_collection = db['songs']
 
 # ---------------------------------------------------------
 # App & paths
 # ---------------------------------------------------------
 app = Flask(__name__, static_folder='static', template_folder='templates')
+app.secret_key = os.getenv("SECRET_KEY")
 MODELS_DIR = "models"
 MUSICGEN_DIR = os.path.join(MODELS_DIR, "musicgen_small_saved")  # or fallback online
 GPT2_DIR = os.path.join(MODELS_DIR, "gpt2_lyrics")
@@ -20,11 +34,7 @@ YAMNET_GTZN_H5 = os.path.join(MODELS_DIR, "yamnet_gtzan_final.h5")
 
 MUSIC_FOLDER = os.path.join("static", "music")
 os.makedirs(MUSIC_FOLDER, exist_ok=True)
-PLAYLIST_FILE = os.path.join("data", "playlist.json")
-os.makedirs("data", exist_ok=True)
-if not os.path.exists(PLAYLIST_FILE):
-    with open(PLAYLIST_FILE, "w") as f:
-        json.dump([], f, indent=2)
+
 
 # ---------------------------------------------------------
 # Load generation models (MusicGen + GPT2)
@@ -105,48 +115,41 @@ def classify_genre_from_file(path):
         traceback.print_exc()
         return ("error", 0.0)
 
-# ---------------------------------------------------------
-# Playlist helpers (simple JSON store)
-# ---------------------------------------------------------
-def load_playlist():
-    with open(PLAYLIST_FILE, "r") as f:
-        return json.load(f)
+#login/register
 
-def save_playlist(data):
-    with open(PLAYLIST_FILE, "w") as f:
-        json.dump(data, f, indent=2)
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-def add_song_entry(entry):
-    pl = load_playlist()
-    pl.insert(0, entry)   # newest first
-    save_playlist(pl)
+    if users_collection.find_one({'email': email}):
+        return jsonify({'error': 'Email already registered'}), 400
 
-# ---------------------------------------------------------
-# Routes: pages
-# ---------------------------------------------------------
-# @app.route("/")
-# def index():
-#     return render_template("index.html")
+    hashed_pw = generate_password_hash(password)
+    users_collection.insert_one({
+        '_id': str(uuid.uuid4()),
+        'email': email,
+        'password_hash': hashed_pw,
+        'created_at': datetime.datetime.utcnow().isoformat()
+    })
+    return jsonify({'ok': True, 'message': 'User registered successfully'})
 
-# @app.route("/login")
-# def login():
-#     return render_template("login.html")
 
-# @app.route("/dashboard")
-# def dashboard():
-#     return render_template("dashboard.html")
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-# @app.route("/playlist")
-# def playlist():
-#     return render_template("playlist.html")
+    user = users_collection.find_one({'email': email})
+    if not user or not check_password_hash(user['password_hash'], password):
+        return jsonify({'error': 'Invalid email or password'}), 401
 
-# @app.route("/library")
-# def library():
-#     return render_template("library.html")
+    return jsonify({'ok': True, 'message': 'Login successful', 'user_id': user['_id']})
 
-# ---------------------------------------------------------
-# API: generate (text -> music+lyrics) (existing)
-# ---------------------------------------------------------
+
+
 @app.route("/generate", methods=["POST"])
 def generate():
     try:
@@ -190,9 +193,10 @@ def generate():
             "lyrics": lyrics,
             "genre": genre,
             "genre_confidence": conf,
-            "created_at": ts
+            "created_at": ts,
+            "user_id": data.get("user_id", None)
         }
-        add_song_entry(entry)
+        songs_collection.insert_one(entry)
 
         return jsonify({"ok": True, "entry": entry})
 
@@ -227,6 +231,7 @@ def upload_file():
         # optional fields
         title = request.form.get("title") or os.path.splitext(f.filename)[0]
         lyrics = request.form.get("lyrics", "")
+        user_id = request.form.get("user_id")
 
         entry = {
             "id": uid,
@@ -236,9 +241,10 @@ def upload_file():
             "lyrics": lyrics,
             "genre": genre,
             "genre_confidence": conf,
-            "created_at": ts
+            "created_at": ts,
+            "user_id": user_id
         }
-        add_song_entry(entry)
+        songs_collection.insert_one(entry)
         return jsonify({"ok": True, "entry": entry})
     except Exception as e:
         traceback.print_exc()
@@ -250,8 +256,25 @@ def upload_file():
 @app.route("/api/playlist")
 def api_playlist():
     try:
-        pl = load_playlist()
-        return jsonify({"ok": True, "playlist": pl})
+        # Optional filters
+        user_id = request.args.get("user_id")
+        query = {}
+        if user_id:
+            query["user_id"] = user_id
+
+        playlist = list(songs_collection.find(query, {"_id": 0}).sort("created_at", -1))
+        return jsonify({"ok": True, "playlist": playlist})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/playlist/<entry_id>", methods=["DELETE"])
+def delete_playlist_entry(entry_id):
+    try:
+        res = songs_collection.delete_one({"id": str(entry_id)})
+        if res.deleted_count == 0:
+            return jsonify({"error": "Entry not found"}), 404
+        return jsonify({"ok": True, "deleted": entry_id})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -264,6 +287,16 @@ def download_file(filename):
     return send_from_directory(MUSIC_FOLDER, filename, as_attachment=True)
 
 # ---------------------------------------------------------
+
+@app.route("/test_db")
+def test_db():
+    try:
+        db.command("ping")
+        return "Database connected!"
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 if __name__ == "__main__":
     print("Starting app...")
     app.run(debug=True)

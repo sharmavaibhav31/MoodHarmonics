@@ -11,6 +11,14 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       // Proxy backend endpoints to Flask during local development
+      '/login': {
+        target: BACKEND,
+        changeOrigin: true,
+      },
+      '/register': {
+        target: BACKEND,
+        changeOrigin: true,
+      },
       '/generate': {
         target: BACKEND,
         changeOrigin: true,

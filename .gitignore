@@ -3,11 +3,12 @@
 __pycache__/
 *.pyc
 
+.env
+
 # Virtual environment folders
 venv/
 .venv/
 env/
-.env
 
 # --- Operating System Files ---
 # macOS

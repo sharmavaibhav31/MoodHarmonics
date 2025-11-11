@@ -1,5 +1,42 @@
 [
   {
+    "id": "cce80207",
+    "filename": "generated_20251107_193325_cce80207.wav",
+    "prompt": "A cinematic score with an epic, orchestral feel",
+    "lyrics": "Write creative song lyrics in the style of A cinematic score with an epic, orchestral feel.\nLyrics:\n\n[Verse 1]\nI'm in love with the shape of an angel\nWe're drifting in a river\nFrom a galaxy far, far away\nThe sound of your footsteps is a sweet perfume\nYou whisper softly to me\n\n[Chorus]\nAnd I am in love\nWith an angel\nYou and I are drifting\nIn a river, drift\nFrom a galaxy far, far away\nI am in love with the shape of an angel\nYou and I are drifting\nIn a river, drift\nFrom a galaxy far, far away\n\n[Verse 2]\nIn a world of infinite complexity\nIt's a world of colors and shapes\nThat makes it hard for me to understand\nYou're in my arms now\n[Chorus]\nAnd I am in love\nWith an angel\nYou and I are drifting\nIn a river, drift\nFrom a galaxy far, far away\nI am in love with the shape of an angel",
+    "genre": "classical",
+    "genre_confidence": 0.8278603553771973,
+    "created_at": "20251107_193325"
+  },
+  {
+    "id": "378aedc9",
+    "filename": "generated_20251107_193310_378aedc9.wav",
+    "prompt": "A soothing piano with jazz",
+    "lyrics": "Write creative song lyrics in the style of A soothing piano with jazz.\nLyrics:\nYou were a little boy when you came out\nNow you're a grown man\nYour hair is tanned, your eyes are bright\nYou are a man with a love that you share\n\nYour love is clear to see\nThe color of your skin is evident\nI wish you would say you love me\nBut I can't, I can't say I do\nBut you are so much more than that\n\nAnd I'll always remember\nYou are a man with a love that you share\nAnd I wish you would say you love me\nBut I can't, I can't say I do\nBut you are so much more than that\n\nAnd I'll always remember\nYou are a man with a love that you share\nAnd I wish you would say you love me\nBut I can't, I can't say I do\nBut you are so much more than that\n\n\nMy love for you\nMy love for you\nMy love for you\nMy",
+    "genre": "classical",
+    "genre_confidence": 0.9536905884742737,
+    "created_at": "20251107_193310"
+  },
+  {
+    "id": "58ee53dd",
+    "filename": "generated_20251107_192800_58ee53dd.wav",
+    "prompt": "Joyful, uplifting, and energetic\u2014perfect for a summer party",
+    "lyrics": "Write creative song lyrics in the style of Joyful, uplifting, and energetic\u2014perfect for a summer party.\nLyrics:\nWon't you sing along with me\nWhen I'm out on the town\nOh, won't you sing along with me\nWhen I'm out on the town\nOh, won't you sing along with me\n\nI can't wait to sing along\nI can't wait to sing along\nWith you on my mind\nI can't wait to sing along\nI can't wait to sing along\nWith you on my mind\n\nI can't wait to sing along\nI can't wait to sing along\nWith you on my mind\n\nI can't wait to sing along\nI can't wait to sing along\nWith you on my mind\nI can't wait to sing along\nI can't wait to sing along\nWith you on my mind\n\nWhen I'm out on the town\nOh, won't you sing along with me\nWhen I'm out on the town\nOh, won't you sing along with me\n\nI can't wait",
+    "genre": "rock",
+    "genre_confidence": 0.7102910280227661,
+    "created_at": "20251107_192800"
+  },
+  {
+    "id": "bca4a2e8",
+    "filename": "uploaded_20251107_191717_bca4a2e8.wav",
+    "title": "jazz_song",
+    "prompt": "",
+    "lyrics": "",
+    "genre": "classical",
+    "genre_confidence": 0.9023140668869019,
+    "created_at": "20251107_191717"
+  },
+  {
     "id": "19e9dbbc",
     "filename": "generated_20251107_164729_19e9dbbc.wav",
     "prompt": "A melancholy yet hopeful tone with a calming rhythm",

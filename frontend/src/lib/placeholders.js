@@ -18,4 +18,11 @@ export function getPlaceholderCover(key = '') {
   return COVERS[idx];
 }
 
+export function attachCover(entry, fallbackKey) {
+  if (!entry) return entry;
+  if (entry.cover) return entry;
+  const key = fallbackKey || entry.filename || entry.title || entry.prompt || entry.id || Date.now();
+  return { ...entry, cover: getPlaceholderCover(key) };
+}
+
 
