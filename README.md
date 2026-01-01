@@ -5,6 +5,10 @@
 MoodHarmonics is a full-stack AI system that converts natural-language prompts into music, lyrics, and genre-classified audio.  
 The focus of this project is **multi-model orchestration, system reliability, and production-style ML integration**, not just standalone model demos.
 
+### Demo Preview
+
+[![MoodHarmonics Demo](https://img.youtube.com/vi/_zNX8DbLzZ0/0.jpg)](https://youtu.be/_zNX8DbLzZ0)
+
 ---
 
 ## 🚀 What This Project Does
