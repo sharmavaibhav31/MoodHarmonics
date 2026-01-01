@@ -127,7 +127,45 @@ Local Storage (Audio Files)
 ## 🧪 Running Locally
 
 ### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/your-username/MoodHarmonics.git
+```
+git clone https://github.com/sharmavaibhav31/MoodHarmonics.git
 cd MoodHarmonics
+```
 
+### 2️⃣ Install Dependencies
+```
+pip install -r requirements.txt
+```
+3️⃣ Start the Server
+```
+python app.py    
+```
+### 4️⃣ Open in Browser
+```
+http://127.0.0.1:5000
+```
+
+## 🧠 Challenges & Learnings
+- Coordinating models across different ML frameworks
+- Preventing repeated heavy model loading
+- Improving lyric structure without training from scratch
+- Designing APIs around ML inference constraints
+
+📌 Future Improvements
+- Dockerized deployment
+- Cloud-based storage and inference
+- JWT-based authentication
+- Streaming-optimized audio generation
+
+## 🎯 Why This Project Matters
+- MoodHarmonics demonstrates:
+- Applied ML integration
+- System-level thinking
+- Performance awareness
+- Engineering trade-offs
+- End-to-end ownership
+
+## 👤 Author
+Vaibhav Sharma   
+Backend & Applied ML Engineer   
+Learning by building real systems.
