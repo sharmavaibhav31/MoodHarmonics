@@ -34,10 +34,11 @@ Key engineering goals:
 ## 🏗️ Architecture Overview
 
 ```text
-Frontend (React)
+Frontend (React) - User Prompt
       ↓
-Backend API (Flask)
+Backend API Layer (Flask)
       ↓
+Orchestration Layer
 -----------------------------------------
 | MusicGen       → Audio Generation      |
 | GPT-based LLM  → Lyrics Generation     |
