@@ -161,15 +161,24 @@ http://127.0.0.1:5000
 - Cloud-based storage and inference
 - JWT-based authentication
 - Streaming-optimized audio generation
+- Add an async task queue
 
 ## 🎯 Why This Project Matters
 - MoodHarmonics demonstrates:
 - Applied ML integration
 - System-level thinking
 - Performance awareness
-- Engineering trade-offs
+- Engineering trade-offs  
 - End-to-end ownership
 
+```
+Right now inference likely runs inside Flask requests.
+API
+ ↓
+Task Queue (Redis + Celery)
+ ↓
+Model Workers
+```
 ## 👤 Author
 Vaibhav Sharma   
 Backend & Applied ML Engineer   
